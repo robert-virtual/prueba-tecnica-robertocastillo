@@ -28,11 +28,19 @@ spring:
         - id: security-service
           uri: lb://security-service
           predicates:
-            - Path=/security/**
+            - Path=/security/**,/customers/**
+          filters:
+            - AuthenticationFilter
         - id: orders-service
           uri: lb://orders-service
           predicates:
-            - Path=/orders/**,/details/**
+            - Path=/orders/**
+          filters:
+            - AuthenticationFilter
+        - id: details-service
+          uri: lb://details-service
+          predicates:
+            - Path=/details/**
           filters:
             - AuthenticationFilter
         - id: payments-service
@@ -41,10 +49,10 @@ spring:
             - Path=/payments/**
           filters:
             - AuthenticationFilter
-        - id: clients-service
-          uri: lb://clients-service
+        - id: customers-service
+          uri: lb://customers-service
           predicates:
-            - Path=/clients/**
+            - Path=/customers/**
           filters:
             - AuthenticationFilter
         - id: eureka-service

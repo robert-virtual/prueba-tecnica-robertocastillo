@@ -9,18 +9,22 @@
         <outputRelativeToContentRoot value="true" />
         <module name="orders-service" />
         <module name="eureka-service" />
-        <module name="clients-service" />
         <module name="products-service" />
         <module name="apigateway-service" />
         <module name="security-service" />
         <module name="payments-service" />
+        <module name="details-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="clients-service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="apigateway-service" options="-parameters" />
       <module name="clients-service" options="-parameters" />
+      <module name="details-service" options="-parameters" />
       <module name="eureka-service" options="-parameters" />
       <module name="orders-service" options="-parameters" />
       <module name="payments-service" options="-parameters" />

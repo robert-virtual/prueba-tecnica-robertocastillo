@@ -1,5 +1,6 @@
 package com.example.apigatewayservice.config;
 
+import com.example.apigatewayservice.service.JwtService;
 import com.google.common.net.HttpHeaders;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
