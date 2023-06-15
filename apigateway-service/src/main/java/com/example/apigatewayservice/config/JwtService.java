@@ -48,7 +48,7 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
 
-        } catch (ExpiredJwtException e) {
+        } catch (Exception e) {
             return null;
         }
     }
