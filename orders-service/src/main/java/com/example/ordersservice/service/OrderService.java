@@ -8,6 +8,7 @@ import com.example.ordersservice.model.Order;
 import com.example.ordersservice.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,15 @@ public class OrderService {
         return modelMapper.map(savedOrder, OrderDto.class);
     }
 
-    public PagedResponse<OrderDto[]> paged(int page, int size) {
-        var paged = ordersRepo.findAll(PageRequest.of(page, size));
+
+    public PagedResponse<OrderDto[]> paged(int page, int size, String customerId) {
+        var paged = customerId != null
+                ? ordersRepo.findAll(
+                    Example.of(
+                            Order.builder().customerId(UUID.fromString(customerId)).build()
+                    ), PageRequest.of(page, size)
+                )
+                : ordersRepo.findAll(PageRequest.of(page, size));
         paged.getTotalPages();
         paged.getTotalElements();
         return PagedResponse
@@ -41,6 +49,6 @@ public class OrderService {
 
     public OrderDto getOne(String id) {
         Order order = ordersRepo.findById(UUID.fromString(id)).orElseThrow();
-        return modelMapper.map(order,OrderDto.class);
+        return modelMapper.map(order, OrderDto.class);
     }
 }

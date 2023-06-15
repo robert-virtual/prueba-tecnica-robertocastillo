@@ -31,12 +31,14 @@ public class OrdersController {
     @GetMapping("paged")
     public PagedResponse<OrderDto[]> paged(
             @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "customer_id", required = false) String customerId
     ) {
-        return orderService.paged(page, size);
+        return orderService.paged(page, size, customerId);
     }
+
     @GetMapping("{id}")
-    public BasicResponse<OrderDto> getOne(@PathVariable String id){
+    public BasicResponse<OrderDto> getOne(@PathVariable String id) {
 
         return BasicResponse
                 .<OrderDto>builder()
