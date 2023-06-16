@@ -3,11 +3,13 @@ package com.example.ordersservice.service;
 import com.example.ordersservice.dto.*;
 import com.example.ordersservice.model.Order;
 import com.example.ordersservice.repository.OrdersRepository;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -18,8 +20,19 @@ import java.util.UUID;
 public class OrderService {
     private final ModelMapper modelMapper;
     private final OrdersRepository ordersRepo;
+    private final WebClient.Builder webclientBuilder;
 
     public OrderDto create(OrderReq orderReq) {
+
+        WebClient webClient = webclientBuilder.build();
+        CustomerRes customer = webClient
+                .get()
+                .uri("lb://security-service/customers/{id}", orderReq.getCustomerId())
+                .retrieve()
+                .bodyToMono(CustomerRes.class).block();
+        if (customer == null) {
+            throw new NotFoundException("Customer not found");
+        }
         Order savedOrder = ordersRepo.save(modelMapper.map(orderReq, Order.class));
         return modelMapper.map(savedOrder, OrderDto.class);
     }
