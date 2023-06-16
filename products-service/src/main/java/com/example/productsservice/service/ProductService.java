@@ -27,8 +27,6 @@ public class ProductService {
         if (sort != null) queries.add("sort=" + sort);
         query += String.join("&",queries);
         String url = productsApiUrl + "/products" + query;
-        log.info(queries.size() + "");
-        log.info(url);
         return Objects.requireNonNull(
                 restTemplate.getForObject(url, Product[].class)
         );
@@ -36,5 +34,9 @@ public class ProductService {
 
     public Product getOne(int id) {
         return Objects.requireNonNull(restTemplate.getForObject(productsApiUrl + "/products/" + id, Product.class));
+    }
+
+    public String[] getCategories() {
+        return Objects.requireNonNull(restTemplate.getForObject(productsApiUrl + "/products/categories" , String[].class));
     }
 }
