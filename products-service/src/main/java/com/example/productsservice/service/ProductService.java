@@ -25,7 +25,7 @@ public class ProductService {
         List<String> queries = new ArrayList<>();
         if (limit != 0) queries.add("limit=" + limit);
         if (sort != null) queries.add("sort=" + sort);
-        query += String.join("&",queries);
+        query += String.join("&", queries);
         String url = productsApiUrl + "/products" + query;
         return Objects.requireNonNull(
                 restTemplate.getForObject(url, Product[].class)
@@ -37,6 +37,14 @@ public class ProductService {
     }
 
     public String[] getCategories() {
-        return Objects.requireNonNull(restTemplate.getForObject(productsApiUrl + "/products/categories" , String[].class));
+        return Objects.requireNonNull(restTemplate.getForObject(productsApiUrl + "/products/categories", String[].class));
+    }
+
+    public Product[] getProductsByCategory(String category) {
+        return Objects.requireNonNull(
+                restTemplate.getForObject(
+                        productsApiUrl + "/products/category/" + category, Product[].class
+                )
+        );
     }
 }

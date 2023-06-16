@@ -43,4 +43,11 @@ public class ProductsController {
                 .data(productService.getCategories())
                 .build();
     }
+    @GetMapping("category/{category}")
+    public BasicResponse<Product[]> productsByCategories(@PathVariable String category) {
+        return BasicResponse.
+                <Product[]>builder()
+                .data(productService.getProductsByCategory(category))
+                .build();
+    }
 }
