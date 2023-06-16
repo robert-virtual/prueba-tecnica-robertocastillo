@@ -2,14 +2,10 @@ package com.example.ordersservice.controller;
 
 import com.example.ordersservice.dto.*;
 import com.example.ordersservice.service.OrderService;
-import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("orders")
