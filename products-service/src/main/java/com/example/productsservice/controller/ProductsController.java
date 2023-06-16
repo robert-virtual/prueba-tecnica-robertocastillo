@@ -1,5 +1,6 @@
 package com.example.productsservice.controller;
 
+import com.example.productsservice.dto.ProductDto;
 import com.example.productsservice.model.BasicResponse;
 import com.example.productsservice.model.Product;
 import com.example.productsservice.service.ProductService;
@@ -18,6 +19,15 @@ public class ProductsController {
 
     private final ProductService productService;
 
+    @PostMapping("create")
+    public BasicResponse<Product> create(
+            @RequestBody ProductDto product
+    ) {
+        return BasicResponse.
+                <Product>builder()
+                .data(productService.create(product))
+                .build();
+    }
     @GetMapping("all")
     public BasicResponse<Product[]> getAll(
             @RequestParam(name = "limit",required = false,defaultValue = "0") int limit,

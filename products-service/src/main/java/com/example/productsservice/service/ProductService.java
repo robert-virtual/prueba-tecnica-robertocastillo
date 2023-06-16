@@ -1,5 +1,6 @@
 package com.example.productsservice.service;
 
+import com.example.productsservice.dto.ProductDto;
 import com.example.productsservice.model.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,16 @@ public class ProductService {
         return Objects.requireNonNull(
                 restTemplate.getForObject(
                         productsApiUrl + "/products/category/" + category, Product[].class
+                )
+        );
+    }
+
+    public Product create(ProductDto product) {
+        return Objects.requireNonNull(
+                restTemplate.postForObject(
+                        productsApiUrl + "/products",
+                        product,
+                        Product.class
                 )
         );
     }
