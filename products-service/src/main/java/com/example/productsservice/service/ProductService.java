@@ -2,6 +2,7 @@ package com.example.productsservice.service;
 
 import com.example.productsservice.model.Product;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     @Value("${app.products.api.url}")
@@ -23,9 +25,12 @@ public class ProductService {
         List<String> queries = new ArrayList<>();
         if (limit != 0) queries.add("limit=" + limit);
         if (sort != null) queries.add("sort=" + sort);
-        query += String.join(query, "&");
+        query += String.join("&",query);
+        String url = productsApiUrl + "/products" + query;
+        log.info(queries.size() + "");
+        log.info(url);
         return Objects.requireNonNull(
-                restTemplate.getForObject(productsApiUrl + "/products" + query, Product[].class)
+                restTemplate.getForObject(url, Product[].class)
         );
     }
 
