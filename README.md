@@ -9,7 +9,7 @@
 
 ### Pasos a seguir para  ejecutar el proyecto
 
-1. Clonar el repositorio de github de el enlace proporcionado
+1. Descargar el ultimo archivo de release en el repositorio proporcionado
 2. Acceder a una instancia de postgresql local
 3. Crear un usuario y contraseña en la instancia de postgresql
 
@@ -21,4 +21,9 @@
 - orders_db 
 - details_db
 - security_db
+
+4. Ingresar a la carpeta descargada del realease de github y  ejecutar los archivos jar 
+```bash
+java -jar *.jar
+```
 
