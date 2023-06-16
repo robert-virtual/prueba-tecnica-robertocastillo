@@ -25,7 +25,7 @@ public class ProductService {
         List<String> queries = new ArrayList<>();
         if (limit != 0) queries.add("limit=" + limit);
         if (sort != null) queries.add("sort=" + sort);
-        query += String.join("&",query);
+        query += String.join("&",queries);
         String url = productsApiUrl + "/products" + query;
         log.info(queries.size() + "");
         log.info(url);
