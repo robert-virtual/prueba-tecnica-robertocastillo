@@ -3,6 +3,7 @@ package com.example.detailsservice.controller;
 import com.example.detailsservice.dto.BasicResponse;
 import com.example.detailsservice.dto.DetailDto;
 import com.example.detailsservice.dto.DetailReq;
+import com.example.detailsservice.dto.ManyDetails;
 import com.example.detailsservice.service.DetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class DetailsController {
     private final DetailsService detailsService;
 
     @PostMapping("create-many")
-    public BasicResponse<DetailDto[]> create(@RequestBody List<DetailReq> detailReq) {
+    public BasicResponse<DetailDto[]> create(@RequestBody ManyDetails detailReq) {
         return BasicResponse
                 .<DetailDto[]>builder()
                 .data(detailsService.createMany(detailReq))

@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -53,8 +54,36 @@ public class DetailsService {
         return modelMapper.map(detailsRepo.save(modelMapper.map(detailReq, Detail.class)), DetailDto.class);
     }
 
-    public DetailDto[] createMany(List<DetailReq> detailReq) {
-        var entities = modelMapper.map(detailReq, Detail[].class);
+    public DetailDto[] createMany(ManyDetails detailReq) {
+        WebClient webClient = webclientBuilder.build();
+        OrderRes order = webClient
+                .get()
+                .uri("lb://orders-service/orders/{id}", detailReq.getOrderId())
+                .retrieve()
+                .bodyToMono(OrderRes.class).block();
+        if (order == null) {
+            throw new NotFoundException("Order not found");
+        }
+
+        ManyProductRes productsRes = webClient
+                .get()
+                .uri("lb://products-service/products/all")
+                .retrieve()
+                .bodyToMono(ManyProductRes.class).block();
+        if (productsRes == null) {
+            throw new NotFoundException("Products not found");
+        }
+        List<Product> products = productsRes.getData();
+        List<DetailReq> details = detailReq.getDetails().stream().peek(
+                detail -> {
+                    detail.setOrderId(UUID.fromString(detailReq.getOrderId()));
+                    Optional<Product> found = products.stream().filter(product -> product.getId() == detail.getProductId()).findFirst();
+                    if (found.isEmpty())
+                        throw new NotFoundException("Product with id=%s not found".formatted(detail.getProductId()));
+                    detail.setPrice(found.get().getPrice());
+                }
+        ).toList();
+        var entities = modelMapper.map(details, Detail[].class);
         return modelMapper.map(detailsRepo.saveAll(Arrays.stream(entities).toList()), DetailDto[].class);
     }
 }
