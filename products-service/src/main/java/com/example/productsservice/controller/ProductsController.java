@@ -2,11 +2,10 @@ package com.example.productsservice.controller;
 
 import com.example.productsservice.model.BasicResponse;
 import com.example.productsservice.model.Product;
+import com.example.productsservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
@@ -17,14 +16,24 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ProductsController {
 
-    @Value("${app.products.api.url}")
-    String productsApiUrl;
-    private final RestTemplate restTemplate;
+    private final ProductService productService;
+
     @GetMapping("all")
-    public BasicResponse<Product[]> getAll(){
+    public BasicResponse<Product[]> getAll(
+            @RequestParam(name = "limit",required = false,defaultValue = "0") int limit,
+            @RequestParam(name = "sort",required = false) String sort
+    ) {
         return BasicResponse.
                 <Product[]>builder()
-                .data(Objects.requireNonNull(restTemplate.getForObject(productsApiUrl + "/products", Product[].class)))
+                .data(productService.getAll(limit,sort))
+                .build();
+    }
+
+    @GetMapping("{id}")
+    public BasicResponse<Product> getOne(@PathVariable int id) {
+        return BasicResponse.
+                <Product>builder()
+                .data(productService.getOne(id))
                 .build();
     }
 }

@@ -1,9 +1,6 @@
 package com.example.ordersservice.controller;
 
-import com.example.ordersservice.dto.BasicResponse;
-import com.example.ordersservice.dto.OrderDto;
-import com.example.ordersservice.dto.OrderReq;
-import com.example.ordersservice.dto.PagedResponse;
+import com.example.ordersservice.dto.*;
 import com.example.ordersservice.service.OrderService;
 import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,10 @@ public class OrdersController {
                 .<OrderDto>builder()
                 .data(orderService.create(orderReq))
                 .build();
+    }
+    @PutMapping("update")
+    public Boolean update(@Validated @RequestBody PaymentReq paymentReq) {
+        return orderService.update(paymentReq);
     }
 
     @GetMapping("paged")

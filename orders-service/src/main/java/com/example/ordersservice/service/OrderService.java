@@ -1,9 +1,6 @@
 package com.example.ordersservice.service;
 
-import com.example.ordersservice.dto.BasicResponse;
-import com.example.ordersservice.dto.OrderDto;
-import com.example.ordersservice.dto.OrderReq;
-import com.example.ordersservice.dto.PagedResponse;
+import com.example.ordersservice.dto.*;
 import com.example.ordersservice.model.Order;
 import com.example.ordersservice.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +9,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,10 +28,10 @@ public class OrderService {
     public PagedResponse<OrderDto[]> paged(int page, int size, String customerId) {
         var paged = customerId != null
                 ? ordersRepo.findAll(
-                    Example.of(
-                            Order.builder().customerId(UUID.fromString(customerId)).build()
-                    ), PageRequest.of(page, size)
-                )
+                Example.of(
+                        Order.builder().customerId(UUID.fromString(customerId)).build()
+                ), PageRequest.of(page, size)
+        )
                 : ordersRepo.findAll(PageRequest.of(page, size));
         paged.getTotalPages();
         paged.getTotalElements();
@@ -50,5 +48,17 @@ public class OrderService {
     public OrderDto getOne(String id) {
         Order order = ordersRepo.findById(UUID.fromString(id)).orElseThrow();
         return modelMapper.map(order, OrderDto.class);
+    }
+
+    public Boolean update(PaymentReq paymentReq) {
+        Optional<Order> order = ordersRepo.findById(UUID.fromString(paymentReq.getOrderId()));
+        if (order.isEmpty()) {
+            return false;
+        }
+        Order updated = order.map(x -> {
+            x.setStatus(Order.PAID);
+            return ordersRepo.save(x);
+        }).get();
+        return Objects.equals(updated.getStatus(), Order.PAID);
     }
 }

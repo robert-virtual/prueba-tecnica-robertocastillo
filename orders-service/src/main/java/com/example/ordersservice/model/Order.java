@@ -18,6 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
+    public static String PAID = "paid";
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -28,5 +29,6 @@ public class Order {
     private String shipCity;
     private String shipCountry;
     private String shipPostalCode;
+    private String status = "pending_payment";
     private LocalDateTime createdAt = LocalDateTime.now();
 }
