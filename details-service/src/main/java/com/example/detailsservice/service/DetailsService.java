@@ -31,22 +31,21 @@ public class DetailsService {
 
     public DetailDto create(DetailReq detailReq) {
         WebClient webClient = webclientBuilder.build();
-        BasicResponse<OrderDto> order = webClient
+        OrderRes order = webClient
                 .get()
                 .uri("lb://orders-service/orders/{id}", detailReq.getOrderId())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<BasicResponse<OrderDto>>() {
-                }).block();
+                .bodyToMono(OrderRes.class).block();
         if (order == null) {
             throw new NotFoundException("Order not found");
         }
         log.info(order.getData().getCreatedAt().toString());
-        BasicResponse<Product> product = webClient
+
+        ProductRes product = webClient
                 .get()
                 .uri("lb://products-service/products/{id}", detailReq.getProductId())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<BasicResponse<Product>>() {
-                }).block();
+                .bodyToMono(ProductRes.class).block();
         if (product == null) {
             throw new NotFoundException("Product not found");
         }
