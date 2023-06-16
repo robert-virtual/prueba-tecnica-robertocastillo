@@ -14,12 +14,16 @@ public class OrdersController {
     private final OrderService orderService;
 
     @PostMapping("create")
-    public BasicResponse<OrderDto> create(@Validated @RequestBody OrderReq orderReq) {
+    public BasicResponse<OrderDto> create(
+            @Validated @RequestBody OrderReq orderReq,
+            @RequestHeader("Authorization") String authorization
+    ) {
         return BasicResponse
                 .<OrderDto>builder()
-                .data(orderService.create(orderReq))
+                .data(orderService.create(orderReq, authorization))
                 .build();
     }
+
     @PutMapping("update")
     public Boolean update(@Validated @RequestBody PaymentReq paymentReq) {
         return orderService.update(paymentReq);

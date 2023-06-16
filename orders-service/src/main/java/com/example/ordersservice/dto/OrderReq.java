@@ -7,7 +7,6 @@ import java.util.UUID;
 
 @Data
 public class OrderReq {
-    @NotNull(message = "clientId cannot be null")
     private UUID customerId;
     private String shipAddress;
     private String shipCity;

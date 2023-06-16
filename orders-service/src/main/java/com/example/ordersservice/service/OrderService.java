@@ -22,17 +22,19 @@ public class OrderService {
     private final OrdersRepository ordersRepo;
     private final WebClient.Builder webclientBuilder;
 
-    public OrderDto create(OrderReq orderReq) {
+    public OrderDto create(OrderReq orderReq, String authorization) {
 
         WebClient webClient = webclientBuilder.build();
-        CustomerRes customer = webClient
+        String customer = webClient
                 .get()
-                .uri("lb://security-service/customers/{id}", orderReq.getCustomerId())
+                .uri("lb://security-service/security/customer-id")
+                .header("Authorization", authorization)
                 .retrieve()
-                .bodyToMono(CustomerRes.class).block();
+                .bodyToMono(String.class).block();
         if (customer == null) {
             throw new NotFoundException("Customer not found");
         }
+        orderReq.setCustomerId(UUID.fromString(customer));
         Order savedOrder = ordersRepo.save(modelMapper.map(orderReq, Order.class));
         return modelMapper.map(savedOrder, OrderDto.class);
     }
